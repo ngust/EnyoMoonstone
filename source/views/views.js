@@ -8,16 +8,22 @@ enyo.kind({
         name: "flickr.MainView",
         classes: "moon enyo-fit",
         handlers: {
-            onRequestPushPanel: "pushPanel"
+            onRequestPushPanel: "pushPanel",
+            onRequestFullScreen: "fullscreen"
         },
          pushPanel: function(inSender, inEvent) {
             this.$.panels.pushPanel(inEvent.panel);
         },
         components: [
+        		{kind: "enyo.ImageView", name: "imageViewer", classes: "enyo-fit", src: "assets/splash.png"},
             {kind: "moon.Panels", classes: "enyo-fit", pattern: "alwaysviewing", popOnBack: true, components: [
                  {kind: "flickr.SearchPanel"}  // Use our new flickr.SearchPanel
             ]}
-        ]
+        ],
+        fullscreen: function(inSender, inEvent) {
+            this.$.imageViewer.set("src", inEvent.model.get("original"));
+            this.$.panels.hide();
+        }
     });
 
 enyo.kind({
@@ -65,6 +71,12 @@ enyo.kind({
         name: "flickr.DetailPanel",
         kind: "moon.Panel",
         layoutKind: "FittableColumnsLayout",
+        events: {
+            onRequestFullScreen: ""
+        },
+        headerComponents: [
+            {kind: "moon.Button", ontap: "requestFullScreen", small: true, content: "View Fullscreen"}
+        ],
         components: [
             {kind: "moon.Image", fit: true, sizing: "contain", name: "image"}
         ],
@@ -82,5 +94,8 @@ enyo.kind({
             if (inInfo.from < inInfo.to) {
                 this.model.fetch();
             }
+        },
+         requestFullScreen: function() {
+            this.doRequestFullScreen({model: this.model});
         }
     });
