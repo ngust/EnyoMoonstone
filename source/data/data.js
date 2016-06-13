@@ -47,6 +47,8 @@ enyo.kind({
 enyo.kind({
         name: "flickr.ImageModel",
         kind: "enyo.Model",
+        source: "flickr",
+        options: { parse: true },
         computed: [
             {method: "thumbnail", path: ["farm", "server", "id", "secret"]},
             {method: "original", path: ["farm", "server", "id", "secret"]}
@@ -60,6 +62,20 @@ enyo.kind({
             return "https://farm" + this.get("farm") +
                 ".static.flickr.com/" + this.get("server") +
                 "/" + this.get("id") + "_" + this.get("secret") + ".jpg";
+        },
+        fetch: function(opts) {
+            this.params = {
+                method: "flickr.photos.getinfo",
+                photo_id: this.get("id")
+            };
+            return this.inherited(arguments);
+        },
+        parse: function(data) {
+            data = data.photo || data;
+            data.title = data.title._content || data.title;
+            data.username = data.owner && data.owner.realname;
+            data.taken = data.dates && data.dates.taken;
+            return data;
         }
     });
 
