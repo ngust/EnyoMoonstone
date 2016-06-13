@@ -23,6 +23,26 @@ enyo.kind({
         handlers: {
             onInputHeaderChange: "search"
         },
+        components: [
+            {kind: "moon.DataGridList", fit: true, name: "resultList", minWidth: 250, minHeight: 300, components: [
+                {kind: "moon.GridListImageItem", imageSizing: "cover", useSubCaption: false, centered: false, bindings: [
+                    {from: "model.title", to: "caption"},
+                    {from: "model.thumbnail", to: "source"}
+                ]}
+            ]}
+        ],
+        bindings: [
+            {from: "photos", to: "$.resultList.collection"}
+        ],
+        create: function() {
+            this.inherited(arguments);
+            this.set("photos", new enyo.Collection([
+                {title: "Photo 1", thumbnail: "http://lorempixel.com/300/300/?1"},
+                {title: "Photo 2", thumbnail: "http://lorempixel.com/300/300/?2"},            
+                {title: "Photo 3", thumbnail: "http://lorempixel.com/300/300/?3"},           
+                {title: "Photo 4", thumbnail: "http://lorempixel.com/300/300/?4"}            
+            ]));
+        },
         search: function(inSender, inEvent) {
             alert(inEvent.originator.get("value"));
         }
