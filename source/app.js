@@ -11,5 +11,5 @@ enyo.kind({
 });
 
 enyo.ready(function () {
-	new myapp.Application({name: "app"});
+	new flickr.Application({name: "app"});
 });
